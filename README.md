@@ -40,7 +40,7 @@ flowchart LR
 | Q | Quit (from home) |
 | 1 / 2 / 3 / 4 | Shift to P / R / N / D |
 | Space or click | Advance dialogue |
-| L | Toggle 中文 / English |
+| L | Toggle 中文 / English (this only works in the visual novel proto) |
 
 ## Build
 
