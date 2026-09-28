@@ -23,7 +23,22 @@ void Launcher::launch(size_t i) {
     state_ = State::Running;
 }
 
+void Launcher::onVehicleEvent(const VehicleEvent& e) {
+    gear_ = e.gear;
+    bool parked = (gear_ == Gear::P);
+
+    if (!parked && state_ != State::Locked) {
+        resumeTo_ = state_;
+        if (state_ == State::Running) games_[running_]->onPause();
+        state_ = State::Locked;
+    } else if (parked && state_ == State::Locked) {
+        state_ = resumeTo_;
+        if (state_ == State::Running) games_[running_]->onResume();
+    }
+}
+
 void Launcher::update(float dt) {
+    if (state_ == State::Locked) return;
     if (state_ == State::Home) {
         updateHome();
         return;
@@ -52,12 +67,17 @@ void Launcher::updateHome() {
 }
 
 void Launcher::render() {
-    if (state_ == State::Running) {
+    if (state_ == State::Locked) {
+        if (resumeTo_ == State::Running) games_[running_]->render();
+        else renderHome();
+        renderLock();
+    } else if (state_ == State::Running) {
         games_[running_]->render();
         DrawText("Esc: home", GetScreenWidth() - 150, 20, 20, GRAY);
-        return;
+    } else {
+        renderHome();
     }
-    renderHome();
+    renderGear();
 }
 
 void Launcher::renderHome() {
@@ -72,8 +92,25 @@ void Launcher::renderHome() {
         if (sel) DrawRectangleLinesEx(r, 4, RAYWHITE);
 
         std::string name = games_[i]->name();
-        int w = MeasureText(name.c_str(), 36);
-        DrawText(name.c_str(), (int)(r.x + (r.width - w) / 2), (int)(r.y + r.height / 2 - 18), 36, RAYWHITE);
+        int w = MeasureText(name.c_str(), 40);
+        DrawText(name.c_str(), (int)(r.x + (r.width - w) / 2), (int)(r.y + r.height / 2 - 20), 40, RAYWHITE);
     }
-    DrawText("arrows + enter, or click    q: quit", 60, 640, 24, GRAY);
+    DrawText("arrows + enter, or click    q: quit    1-4: gear", 60, 640, 20, GRAY);
+}
+
+void Launcher::renderLock() {
+    int W = GetScreenWidth(), H = GetScreenHeight();
+    DrawRectangle(0, 0, W, H, Fade(BLACK, 0.75f));
+    const char* msg = "Shift to Park to play";
+    int w = MeasureText(msg, 40);
+    DrawText(msg, (W - w) / 2, H / 2 - 20, 40, RAYWHITE);
+}
+
+void Launcher::renderGear() {
+    const char* labels[] = {"P", "R", "N", "D"};
+    int x0 = GetScreenWidth() - 180;
+    for (int i = 0; i < 4; i++) {
+        bool on = ((int)gear_ == i);
+        DrawText(labels[i], x0 + i * 40, 685, 30, on ? RAYWHITE : DARKGRAY);
+    }
 }
