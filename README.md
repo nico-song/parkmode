@@ -6,8 +6,8 @@ A small in-car style game platform in C++. It hosts games behind a common interf
 
 ## What it does
 
-- **Launcher** with a home screen for picking games (keyboard or mouse)
-- **Park lock**: shifting out of Park pauses whatever's running and shows a lock screen; shifting back resumes exactly where you left off
+- **Launcher** with a home screen for picking games (keyboard arrow keys or mouse!)
+- **Park lock**: shifting out of Park pauses whatever's running and shows a lock screen; shifting back resumes exactly where you left off! (it assumes anything OTHER than park is moving which is true technically)
 - **Two games** built on the same interface:
   - **Snake**
   - **Visual novel** with Chinese and English dialogue, switchable live with one key
@@ -44,7 +44,7 @@ flowchart LR
 
 ## Build
 
-Requires CMake 3.20+ and a C++20 compiler. raylib is fetched automatically.
+Requires CMake 3.20+ and a C++20 compiler i think. raylib is fetched automatically.
 
 ```bash
 cmake -B build
@@ -65,4 +65,4 @@ assets/fonts/   pixel font + license
 ## Credits
 
 - [raylib](https://www.raylib.com) for windowing, input, and drawing
-- [Fusion Pixel Font](https://github.com/TakWolf/fusion-pixel-font) (SIL Open Font License 1.1)
+- [Fusion Pixel Font](https://github.com/TakWolf/fusion-pixel-font) for the Chinese pixelated font to match the rest English, 10px (compared to normal 12px (?)) (SIL Open Font License 1.1)
