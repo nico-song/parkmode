@@ -3,7 +3,10 @@
 
 namespace {
 constexpr float kCharsPerSec = 30.f;
-constexpr float kFontSize = 40.f;
+constexpr int kFontBase = 10;
+constexpr float kTextSize = kFontBase * 3;
+constexpr float kHintSize = kFontBase * 2;
+const char* kFontPath = ASSETS_DIR "/fonts/fusion-pixel-10px-monospaced-zh_hans.ttf";
 const char* kHintZh = "空格：继续    L：English";
 const char* kHintEn = "Space: next    L: 中文";
 
@@ -59,8 +62,8 @@ void VisualNovel::loadFont() {
     }
     std::vector<int> cps(unique.begin(), unique.end());
 
-    font_ = LoadFontEx(ASSETS_DIR "/fonts/NotoSansSC-Regular.ttf", (int)kFontSize, cps.data(), (int)cps.size());
-    SetTextureFilter(font_.texture, TEXTURE_FILTER_BILINEAR);
+    font_ = LoadFontEx(kFontPath, kFontBase, cps.data(), (int)cps.size());
+    SetTextureFilter(font_.texture, TEXTURE_FILTER_POINT);
     fontLoaded_ = true;
 }
 
@@ -90,8 +93,8 @@ void VisualNovel::render() {
     DrawRectangle(60, 460, 1160, 220, Fade(BLACK, 0.8f));
     DrawRectangleLines(60, 460, 1160, 220, RAYWHITE);
 
-    DrawTextEx(font_, speaker().c_str(), {90, 475}, kFontSize, 1, GOLD);
+    DrawTextEx(font_, speaker().c_str(), {90, 475}, kTextSize, 0, GOLD);
     std::string shown = utf8Prefix(text(), (int)shown_);
-    DrawTextEx(font_, shown.c_str(), {90, 535}, kFontSize, 1, RAYWHITE);
-    DrawTextEx(font_, chinese_ ? kHintZh : kHintEn, {90, 640}, 24, 1, GRAY);
+    DrawTextEx(font_, shown.c_str(), {90, 535}, kTextSize, 0, RAYWHITE);
+    DrawTextEx(font_, chinese_ ? kHintZh : kHintEn, {90, 640}, kHintSize, 0, GRAY);
 }
