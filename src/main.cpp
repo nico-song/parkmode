@@ -1,12 +1,13 @@
 #include "raylib.h"
 #include "games/Snake.h"
+#include "games/VisualNovel.h"
 #include <memory>
 
 int main() {
     InitWindow(1280, 720, "parkmode");
     SetTargetFPS(60);
 
-    std::unique_ptr<IGame> game = std::make_unique<Snake>();
+    std::unique_ptr<IGame> game = std::make_unique<VisualNovel>();
     game->init();
 
     while (!WindowShouldClose()) {
